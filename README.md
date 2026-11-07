@@ -1,34 +1,39 @@
-# Truth Trails — Media Intelligence UI
+# Truth Trails frontend
 
-A responsive front-end prototype for the Truth Trails academic project: a proposed deepfake-detection and digital-content verification platform.
+Static HTML/CSS/JavaScript interface for the local FastAPI service.
 
-## Current status
+## Run
 
-- Responsive static HTML/CSS/JavaScript interface.
-- Image selection, drag-and-drop, preview, file type/size validation.
-- Research snapshot based on the documented 307-image test set.
-- Explicit demo mode: **the UI does not run a trained model**.
-- No live AI inference, blockchain, watermarking, or news verification is connected.
+Start the backend from `../backend`:
 
-## Run locally
+```sh
+source .venv/bin/activate
+uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
 
-Open `index.html` in a modern browser. No build step or package installation is required.
+Then, from this folder, serve the frontend:
 
-## Publish with GitHub Pages
+```sh
+python3 -m http.server 5173 --bind 127.0.0.1
+```
 
-1. Create a new GitHub repository, for example `truth-trails`.
-2. Upload `index.html`, `README.md`, and `.gitignore` to the repository root.
-3. In the repository, open **Settings → Pages**.
-4. Under build/deployment, choose **Deploy from a branch**.
-5. Select branch `main` and folder `/ (root)`, then save.
-6. Wait for GitHub Pages to publish the site; the Pages panel will show the public URL.
+Open <http://127.0.0.1:5173>. The API address is set once in the
+`api-base-url` meta tag in `index.html`.
 
-## Important before making the repository public
+## Features
 
-- Do not commit datasets, credentials, API keys, private university information, or model files you do not have permission to distribute.
-- The included interface contains research metrics from the project's current documented experiments. Verify these figures against your final report before public release.
-- The interface is a prototype and must not be presented as an operational deepfake detector.
+- Image upload with preview, type checks, and a 10 MB limit.
+- Experimental video upload with preview, a 100 MB client-side limit, and a
+  30-second server-side limit.
+- Structured image/video report, model/version details, score explanation,
+  file SHA-256, and optional user-supplied source reference.
+- Browser-local history for up to 20 report records; uploaded media bytes are
+  not stored in history.
+- Print report, research snapshot, methodology, and limitations.
+- Six-model comparison table from the internal presentation, clearly marked as
+  reported results that have not been independently rerun here.
 
-## Planned next step: connect actual inference
-
-The model currently lives in a Google Colab workflow. Before connecting a live prediction endpoint, identify and export the exact trained model artifact and record its preprocessing requirements, label mapping, and test results. Then build an API (for example, Flask or FastAPI) that loads that artifact and returns a prediction. Do not show model predictions or confidence scores until the API is actually connected and tested.
+Video scores are exploratory: the still-image classifier has not been
+validated on video frames, the aggregation method is unvalidated, and audio is
+not analyzed. Source references are not verified. Blockchain, watermark
+detection, and community review are not connected.
