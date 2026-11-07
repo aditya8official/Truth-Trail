@@ -12,6 +12,7 @@ PREDICTION_FILES = (
     "mobilenetv2_finetuned_test_predictions.csv",
 )
 PREDICTION_COLUMNS = {"path", "true_label", "fake_probability", "predicted_label"}
+FAKE_FILENAME_GROUPS = {"easy", "mid", "hard"}
 
 
 def _auc(labels: list[int], scores: list[float]) -> float:
@@ -118,6 +119,31 @@ def _audit_prediction_file(path: Path, test_rows: list[dict], threshold: float) 
         prediction == int(score >= threshold)
         for prediction, score in zip(predictions, scores)
     )
+    groups: dict[str, dict[str, int]] = {}
+    for row, label, prediction in zip(rows, labels, predictions):
+        if label == 0:
+            group_name = "real"
+        else:
+            filename_group = Path(row["path"]).stem.split("_", 1)[0].lower()
+            group_name = filename_group if filename_group in FAKE_FILENAME_GROUPS else "fake_other"
+        counts = groups.setdefault(
+            group_name,
+            {"count": 0, "correct": 0, "false_positives": 0, "false_negatives": 0},
+        )
+        counts["count"] += 1
+        counts["correct"] += int(label == prediction)
+        counts["false_positives"] += int(label == 0 and prediction == 1)
+        counts["false_negatives"] += int(label == 1 and prediction == 0)
+
+    group_order = {"real": 0, "easy": 1, "mid": 2, "hard": 3, "fake_other": 4}
+    group_breakdown = [
+        {
+            "filename_group": name,
+            **counts,
+            "class_specific_accuracy": counts["correct"] / counts["count"],
+        }
+        for name, counts in sorted(groups.items(), key=lambda item: group_order.get(item[0], 99))
+    ]
 
     return {
         "file": path.name,
@@ -126,6 +152,7 @@ def _audit_prediction_file(path: Path, test_rows: list[dict], threshold: float) 
         "predicted_labels_match_threshold": threshold_labels_match,
         "threshold": threshold,
         "metrics": _compute_metrics(labels, scores, predictions),
+        "filename_group_breakdown": group_breakdown,
     }
 
 

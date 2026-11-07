@@ -27,6 +27,26 @@ the more detailed fine-tuned metrics documented in the model card. They are
 still results from one saved image-level split, not a fresh training run or an
 independent-dataset evaluation.
 
+## Filename-group error breakdown
+
+The dataset's [source README](https://github.com/minostauros/Real-and-Fake-Face-Detection)
+describes `easy`, `mid`, and `hard` as subjective fake categories. For the
+following table, class-specific accuracy means specificity for the real group
+and fake recall for the three fake filename groups.
+
+| Test filename group | Count | Frozen score | Fine-tuned score | Change |
+|---|---:|---:|---:|---:|
+| Real specificity | 163 | 74.23% | 70.55% | -3.68 pp |
+| Fake `easy` recall | 41 | 48.78% | 53.66% | +4.88 pp |
+| Fake `mid` recall | 68 | 61.76% | 63.24% | +1.47 pp |
+| Fake `hard` recall | 35 | 42.86% | 48.57% | +5.71 pp |
+
+`pp` means percentage points.
+
+These are descriptive results on the same single test split. The filename
+groups are subjective, and this breakdown does not identify people, source
+photos, or manipulation lineages.
+
 ## Traditional-model results
 
 The SVM, KNN, Random Forest, and Logistic Regression rows in

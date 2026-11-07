@@ -38,6 +38,8 @@ the `api-base-url` meta tag in `index.html`.
 - Browser-local history for up to 20 report records; media bytes are not stored
   in history.
 - Printable reports, API health, research metrics, and documented limitations.
+- Saved test-set error breakdown for real/easy/mid/hard filename groups; the
+  fake difficulty categories are subjective, not source identities.
 
 Video analysis is not validated; audio is not analyzed. Source references are
 not verified. Blockchain records, watermark detection, community review, and

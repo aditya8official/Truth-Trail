@@ -155,6 +155,19 @@
             </tbody>
           </table>
         </div>
+        <div class="metrics-table-wrap">
+          <table class="metrics-table">
+            <caption>Saved test-set filename groups. Real shows specificity; fake groups show recall. Easy, mid, and hard are subjective source categories, not source identities. “pp” means percentage points.</caption>
+            <thead><tr><th scope="col">Group</th><th scope="col">Images</th><th scope="col">Frozen MobileNetV2</th><th scope="col">Fine-tuned MobileNetV2</th><th scope="col">Change</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Real specificity</th><td>163</td><td>74.23%</td><td>70.55%</td><td>-3.68 pp</td></tr>
+              <tr><th scope="row">Fake · easy recall</th><td>41</td><td>48.78%</td><td>53.66%</td><td>+4.88 pp</td></tr>
+              <tr><th scope="row">Fake · mid recall</th><td>68</td><td>61.76%</td><td>63.24%</td><td>+1.47 pp</td></tr>
+              <tr><th scope="row">Fake · hard recall</th><td>35</td><td>42.86%</td><td>48.57%</td><td>+5.71 pp</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="privacy">The fine-tuned model detected five more fake images overall, with six more false positives on real images. These filename-group rates describe one saved test split and do not establish source-disjoint generalization.</p>
       </section>
 
       <section class="activity" id="history" aria-labelledby="historyTitle">
