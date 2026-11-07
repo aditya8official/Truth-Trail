@@ -42,8 +42,9 @@ the `api-base-url` meta tag in `index.html`.
 Video analysis is not validated; audio is not analyzed. Source references are
 not verified. Blockchain records, watermark detection, community review, and
 external source verification are not connected. The six-model comparison
-shows values reported in the internal presentation and labels them as not
-independently rerun in this application.
+was cross-checked against saved artifacts. MobileNetV2 metrics were recomputed
+from per-image predictions; traditional-model entries match a saved aggregate
+CSV. See `docs/research_metrics_audit.md`.
 
 ## Research and licensing
 
@@ -68,4 +69,14 @@ Audit an existing split manifest without downloading data:
 
 ```sh
 python research/audit_split.py /path/to/dataset_split_seed42.json
+```
+
+Recompute metrics from the saved prediction CSVs and check their test rows
+against the manifest:
+
+```sh
+python research/audit_predictions.py \
+  --manifest /path/to/dataset_split_seed42.json \
+  --results-dir /path/to/results \
+  --traditional-metrics /path/to/results/traditional_models_seed42.csv
 ```

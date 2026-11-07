@@ -41,8 +41,10 @@ fine-tuned model:
 - Average precision: 0.6759
 
 These values are recorded experiment results, not evidence of performance on
-new datasets. The test images themselves are not present in this local project,
-so the saved evaluation could not be rerun during this implementation.
+new datasets. The test images are not present in this local project, so the
+model could not be rerun from images or retrained. Metrics were recomputed from
+the saved per-image prediction CSV and checked against the split manifest; see
+`docs/research_metrics_audit.md`.
 
 ## Data and evaluation limitations
 
