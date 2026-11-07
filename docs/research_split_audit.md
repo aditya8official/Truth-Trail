@@ -43,6 +43,12 @@ confirmed leakage, until the dataset provider or original files confirm the
 naming convention. The source also describes easy/mid/hard as subjective
 categories rather than explicit labels for a separate task.
 
+A separate, explicitly provisional grouped-split proposal is documented in
+[`docs/candidate_group_split.md`](candidate_group_split.md). It keeps inferred
+groups together for sensitivity analysis only and does not replace this saved
+split or support model-evaluation claims until the filename convention is
+confirmed.
+
 The saved notebook output reports no exact byte-identical duplicates in the
 full image collection. That is a recorded notebook result; the image files are
 not available locally to rerun its hash check. The manifest paths point into a

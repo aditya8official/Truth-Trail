@@ -55,8 +55,10 @@ before redistributing data-derived artifacts. The split audit found filename
 numbers matching across all 480 fake IDs and real IDs 1–480. Treat the 286
 cross-split candidate groups as a high-priority potential leakage risk; the
 source documentation does not confirm that the number denotes a source image.
-See `docs/dataset_provenance.md`, `docs/research_split_audit.md`, and
-`docs/model_card.md`.
+An opt-in, provisional grouped-split proposal is available for sensitivity
+analysis, but it must not be used for evaluation until the filename convention
+is confirmed. See `docs/dataset_provenance.md`, `docs/research_split_audit.md`,
+`docs/candidate_group_split.md`, and `docs/model_card.md`.
 
 No dataset, model weights, virtual environment, or private research outputs are
 included in this repository.
@@ -74,6 +76,15 @@ Audit an existing split manifest without downloading data:
 ```sh
 python research/audit_split.py /path/to/dataset_split_seed42.json
 ```
+
+Print a candidate grouped split without writing a manifest:
+
+```sh
+python research/propose_grouped_split.py /path/to/dataset_split_seed42.json
+```
+
+Writing a separate candidate manifest requires the explicit
+`--accept-filename-link-assumption` flag. See `docs/candidate_group_split.md`.
 
 Recompute metrics from the saved prediction CSVs and check their test rows
 against the manifest:
