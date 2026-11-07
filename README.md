@@ -1,39 +1,71 @@
-# Truth Trails frontend
+# Truth Trails
 
-Static HTML/CSS/JavaScript interface for the local FastAPI service.
+Experimental face-image analysis project with a static web interface and a
+local FastAPI service. Predictions are research signals, not proof of
+authenticity.
 
-## Run
+## Run locally
 
-Start the backend from `../backend`:
+The trained model is not included in this repository. Place an authorized copy
+at `backend/models/mobilenetv2_finetuned_best.keras` before starting the API.
+
+Terminal 1 — install backend dependencies and start the API:
 
 ```sh
+cd backend
+python3 -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Then, from this folder, serve the frontend:
+Terminal 2 — from the repository root, serve the frontend:
 
 ```sh
 python3 -m http.server 5173 --bind 127.0.0.1
 ```
 
-Open <http://127.0.0.1:5173>. The API address is set once in the
-`api-base-url` meta tag in `index.html`.
+Open <http://127.0.0.1:5173>. API docs are at
+<http://127.0.0.1:8000/docs>. The frontend API address is configurable through
+the `api-base-url` meta tag in `index.html`.
 
-## Features
+## Current capabilities
 
-- Image upload with preview, type checks, and a 10 MB limit.
-- Experimental video upload with preview, a 100 MB client-side limit, and a
-  30-second server-side limit.
-- Structured image/video report, model/version details, score explanation,
-  file SHA-256, and optional user-supplied source reference.
-- Browser-local history for up to 20 report records; uploaded media bytes are
-  not stored in history.
-- Print report, research snapshot, methodology, and limitations.
-- Six-model comparison table from the internal presentation, clearly marked as
-  reported results that have not been independently rerun here.
+- Image upload, preview, validation, and local model inference.
+- Experimental video sampling with face crops using the still-image model.
+- Structured reports with model/version, raw score meaning, file hash, and an
+  optional user-supplied source reference.
+- Browser-local history for up to 20 report records; media bytes are not stored
+  in history.
+- Printable reports, API health, research metrics, and documented limitations.
 
-Video scores are exploratory: the still-image classifier has not been
-validated on video frames, the aggregation method is unvalidated, and audio is
-not analyzed. Source references are not verified. Blockchain, watermark
-detection, and community review are not connected.
+Video analysis is not validated; audio is not analyzed. Source references are
+not verified. Blockchain records, watermark detection, community review, and
+external source verification are not connected. The six-model comparison
+shows values reported in the internal presentation and labels them as not
+independently rerun in this application.
+
+## Research and licensing
+
+The dataset page lists CC BY-NC-SA 4.0. Review the intended use and rights
+before redistributing data-derived artifacts. The split audit found filename
+groups crossing splits, but those groups do not establish confirmed leakage.
+See `docs/dataset_provenance.md`, `docs/research_split_audit.md`, and
+`docs/model_card.md`.
+
+No dataset, model weights, virtual environment, or private research outputs are
+included in this repository.
+
+## Checks
+
+Run focused backend tests from `backend/`:
+
+```sh
+.venv/bin/python -m unittest discover -s tests -v
+```
+
+Audit an existing split manifest without downloading data:
+
+```sh
+python research/audit_split.py /path/to/dataset_split_seed42.json
+```
