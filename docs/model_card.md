@@ -54,11 +54,12 @@ dataset's [source documentation](https://github.com/minostauros/Real-and-Fake-Fa
 describes expert-Photoshop composite face images and subjective easy/mid/hard
 fake categories. This is not a video deepfake benchmark.
 
-The split is image-level. Filename inspection found numeric groups that cross
-splits, but the numeric token is not documented as a source identity. This is a
-possible related-image risk, not confirmed leakage. Kaggle metadata identifies
-the dataset license as CC BY-NC-SA 4.0; intended use and any rights related to
-the depicted people still need review. See
+The split is image-level. All 480 fake numeric filename tokens match real
+filename IDs 1–480. If those numbers identify original images, 286 candidate
+real/fake groups cross splits. The source README does not confirm that meaning,
+so this is a high-priority potential leakage risk, not confirmed leakage.
+Kaggle metadata identifies the dataset license as CC BY-NC-SA 4.0; intended
+use and any rights related to the depicted people still need review. See
 `docs/research_split_audit.md` and `docs/dataset_provenance.md`.
 
 ## Video inference limitation

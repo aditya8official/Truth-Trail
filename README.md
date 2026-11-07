@@ -52,7 +52,9 @@ CSV. See `docs/research_metrics_audit.md`.
 
 The dataset page lists CC BY-NC-SA 4.0. Review the intended use and rights
 before redistributing data-derived artifacts. The split audit found filename
-groups crossing splits, but those groups do not establish confirmed leakage.
+numbers matching across all 480 fake IDs and real IDs 1–480. Treat the 286
+cross-split candidate groups as a high-priority potential leakage risk; the
+source documentation does not confirm that the number denotes a source image.
 See `docs/dataset_provenance.md`, `docs/research_split_audit.md`, and
 `docs/model_card.md`.
 

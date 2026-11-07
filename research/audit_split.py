@@ -20,6 +20,15 @@ def fake_numeric_group(path: str) -> str | None:
     return None
 
 
+def real_numeric_group(path: str) -> str | None:
+    """Return the numeric token from real-image names like real_00001.jpg."""
+    stem = Path(path).stem
+    pieces = stem.split("_")
+    if len(pieces) == 2 and pieces[0] == "real" and pieces[1].isdigit():
+        return str(int(pieces[1]))
+    return None
+
+
 def digest_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as file:
@@ -43,6 +52,7 @@ def audit(manifest_path: Path, dataset_root: Path | None = None) -> dict:
     path_overlaps = {}
     basename_splits: dict[str, set[str]] = defaultdict(set)
     numeric_group_splits: dict[str, set[str]] = defaultdict(set)
+    real_numeric_group_splits: dict[str, set[str]] = defaultdict(set)
     difficulty_numeric_group_splits: dict[str, set[str]] = defaultdict(set)
     path_rows: list[str] = []
     folder_label_mismatches = []
@@ -60,6 +70,9 @@ def audit(manifest_path: Path, dataset_root: Path | None = None) -> dict:
                 difficulty_numeric_group_splits[
                     "_".join(stem_parts[:2])
                 ].add(split)
+            real_group = real_numeric_group(source_path)
+            if real_group is not None:
+                real_numeric_group_splits[real_group].add(split)
 
             expected_folder = "training_real" if record["label"] == 0 else "training_fake"
             if f"/{expected_folder}/" not in source_path.replace("\\", "/"):
@@ -84,6 +97,21 @@ def audit(manifest_path: Path, dataset_root: Path | None = None) -> dict:
         for group, split_set in difficulty_numeric_group_splits.items()
         if len(split_set) > 1
     }
+    shared_real_fake_numeric_ids = set(real_numeric_group_splits) & set(numeric_group_splits)
+    candidate_real_fake_group_splits = {
+        group: real_numeric_group_splits[group] | numeric_group_splits[group]
+        for group in shared_real_fake_numeric_ids
+    }
+    candidate_real_fake_crossings = {
+        group: sorted(split_set)
+        for group, split_set in candidate_real_fake_group_splits.items()
+        if len(split_set) > 1
+    }
+    real_split_separated_from_all_fake = sum(
+        1
+        for group in shared_real_fake_numeric_ids
+        if not (real_numeric_group_splits[group] & numeric_group_splits[group])
+    )
 
     content_hashes: dict[str, set[str]] = defaultdict(set)
     missing_images = 0
@@ -123,12 +151,24 @@ def audit(manifest_path: Path, dataset_root: Path | None = None) -> dict:
             list(sorted(numeric_group_crossings.items()))[:12]
         ),
         "fake_difficulty_numeric_groups_crossing_splits": difficulty_numeric_crossings,
+        "real_filename_numeric_id_count": len(real_numeric_group_splits),
+        "shared_real_fake_numeric_id_count": len(shared_real_fake_numeric_ids),
+        "shared_real_fake_numeric_id_range": (
+            [min(map(int, shared_real_fake_numeric_ids)), max(map(int, shared_real_fake_numeric_ids))]
+            if shared_real_fake_numeric_ids else None
+        ),
+        "candidate_real_fake_numeric_groups_crossing_split_count": len(candidate_real_fake_crossings),
+        "candidate_real_fake_groups_where_real_split_differs_from_every_fake": real_split_separated_from_all_fake,
+        "candidate_real_fake_numeric_groups_crossing_examples": dict(
+            list(sorted(candidate_real_fake_crossings.items(), key=lambda item: int(item[0])))[:12]
+        ),
         "label_folder_mismatches": folder_label_mismatches,
         "content_hash_groups_crossing_splits": content_hash_crossings if dataset_root else None,
         "missing_image_files": missing_images if dataset_root else None,
         "note": (
-            "The numeric token in fake filenames is not documented here as a source identity. "
-            "Cross-split numeric groups are review candidates, not evidence of leakage."
+            "All shared real/fake numeric IDs are exact filename matches, which is a strong candidate "
+            "pairing signal. The source README does not define whether the number identifies an original "
+            "source image, so this remains a high-priority review candidate, not confirmed leakage."
         ),
     }
 

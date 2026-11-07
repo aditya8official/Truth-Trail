@@ -46,11 +46,16 @@ but no source-person, original-image, or group identifiers. The dataset images
 were not found in the local research folder, so image hashes and source
 relationships could not be checked directly.
 
-The read-only filename audit found 153 numeric-token groups crossing splits.
-This is a review signal only. The source README explains filename parts as
-replacement-region information, and the available metadata does not establish
-that the numeric token is a source identity. It is therefore not evidence of
-confirmed leakage.
+The manifest contains 480 distinct fake numeric tokens, and every token
+matches a real filename ID from `real_00001` through `real_00480` after
+normalizing leading zeros. If a shared number links fake composites to a real
+source image, 286 candidate groups cross splits; in 157, the real image is
+separated from every fake with that number. This exact alignment is a strong
+pairing signal, but the source README only documents filename information
+about replaced face regions and does not explicitly define the numeric token
+as a source-image ID. Treat the overlap as a high-priority potential leakage
+risk pending confirmation, not as proven leakage. The earlier fake-only audit
+also found 153 numeric-token groups crossing splits.
 
 ## Next research action
 

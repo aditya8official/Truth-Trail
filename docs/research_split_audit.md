@@ -28,13 +28,19 @@ Read-only checks on the manifest found:
   than one split when grouped across `easy`, `mid`, and `hard` prefixes.
 - Grouping by both difficulty prefix and numeric token yields no multi-file
   groups crossing splits.
+- All 480 fake numeric tokens match a real filename ID in `real_00001` through
+  `real_00480` after normalizing leading zeros.
+- If each shared number is treated as a candidate real/fake group, 286 of the
+  480 candidate groups span multiple splits. In 157 groups, the real image is
+  in a split containing none of the fake images with that number.
 
-The numeric-token grouping is only a review heuristic. The
+The exact numeric alignment is a strong candidate pairing signal, but the
 [source dataset README](https://github.com/minostauros/Real-and-Fake-Face-Detection)
-says fake filename patterns encode which face regions were replaced, but the
-local artifacts do not establish that the numeric token identifies a person,
-source image, or manipulation lineage. Cross-split numeric groups therefore
-do not prove leakage. The source also describes easy/mid/hard as subjective
+only says fake filenames indicate which face regions were replaced; it does
+not define the middle numeric token as an original-image or source-person ID.
+Treat the 286 cross-split groups as a high-priority potential leakage risk, not
+confirmed leakage, until the dataset provider or original files confirm the
+naming convention. The source also describes easy/mid/hard as subjective
 categories rather than explicit labels for a separate task.
 
 The saved notebook output reports no exact byte-identical duplicates in the
