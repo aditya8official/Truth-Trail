@@ -60,6 +60,11 @@ analysis, but it must not be used for evaluation until the filename convention
 is confirmed. See `docs/dataset_provenance.md`, `docs/research_split_audit.md`,
 `docs/candidate_group_split.md`, and `docs/model_card.md`.
 
+An optional larger academic training workflow is documented in
+`docs/large_dataset_training.md`. It uses a separately published 142,837-image
+identity-isolated dataset; its images and resulting model weights stay local
+and are excluded from Git.
+
 No dataset, model weights, virtual environment, or private research outputs are
 included in this repository.
 
@@ -94,4 +99,21 @@ python research/audit_predictions.py \
   --manifest /path/to/dataset_split_seed42.json \
   --results-dir /path/to/results \
   --traditional-metrics /path/to/results/traditional_models_seed42.csv
+```
+
+Train a separate MobileNetV2 candidate on the larger dataset (downloads data
+and ImageNet initialization weights):
+
+```sh
+backend/.venv/bin/python research/train_mobilenetv2_hf.py
+```
+
+See `docs/large_dataset_training.md` for the dataset, label mapping, outputs,
+and evaluation details.
+
+Analyze validation-selected decision thresholds for a local candidate without
+changing the API default:
+
+```sh
+backend/.venv/bin/python research/calibrate_threshold.py
 ```

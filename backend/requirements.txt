@@ -4,3 +4,4 @@ python-multipart>=0.0.20,<1
 numpy>=1.26,<3
 opencv-contrib-python>=4.12,<5
 tensorflow>=2.20,<3
+datasets[vision]>=4,<5

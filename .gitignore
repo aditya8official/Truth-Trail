@@ -10,3 +10,4 @@ backend/models/*.keras
 backend/models/*.h5
 datasets/
 data/
+backend/training_runs/
